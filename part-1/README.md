@@ -1,24 +1,14 @@
-# Part 1 example application
+# Website summarization application tutorial example app | Part 1
 
-**Python quickstart tutorial | Incremental adoption**
+This example application showcases Resonate's ability to automatically retry failed function executions. This example works with Part 1 of the tutorial series: [https://journal.resonatehq.io/p/durable-website-summarization-app-part-1](https://journal.resonatehq.io/p/durable-website-summarization-app-part-1).
 
-This example application is meant to showcase Resonate's incremental adoption value proposition and work with the content in the first part of the [Python SDK quickstart tutorial](https://docs.resonatehq.io/get-started/python-quickstart#part-1-incremental-adoption).
-
-This example is set up using [Rye](https://rye.astral.sh/) as the environment and package manager.
+This example is set up using [uv](https://docs.astral.sh/uv/) as the environment and package manager.
 
 Check the `pyproject.toml` file to see which version of the Python SDK is being used.
 
-**Terminal 1:**
+To run this app:
 
 ```shell
 uv sync
 uv run app
-```
-
-**Terminal 2:**
-
-From another terminal send a cURL request:
-
-```shell
-curl -X POST http://localhost:5000/summarize -H "Content-Type: application/json" -d '{"url": "http://example.com"}'
 ```
