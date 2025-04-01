@@ -9,9 +9,14 @@ This is an example website summarization application built with:
 
 This application uses [uv](https://docs.astral.sh/uv/) as the environment and package manager.
 
-When running this application locally, you will use 4 separate terminals, each representing its own process, representing a distributed application separated by a network.
+**Prerequisites:**
 
-Make sure you have [Ollama](https://ollama.com/) installed and running llama3.1
+- Make sure you have [Ollama](https://ollama.com/) installed and running llama3.1
+- Make sure you have a Google Chrome browser running.
+
+**Running the application:**
+
+When running this application locally, you will use 4 separate terminals, each representing its own process, representing a distributed application separated by a network.
 
 Run a local Resonate Server:
 
