@@ -44,8 +44,9 @@ def download(_, usable_id, url):
     if os.path.exists(filename):
         print(f"File {filename} already exists. Skipping download.")
         return filename
+    driver = webdriver.Chrome()
+
     try:
-        driver = webdriver.Chrome()
         driver.get(url)
         soup = BeautifulSoup(driver.page_source, "html.parser")
         content = soup.get_text()
@@ -85,10 +86,10 @@ def summarize(_, filename):
 def send_email(_, summary, email, promise_id):
     print(f"Summary: {summary}")
     print(
-        f"Click to confirm: http://localhost:5000/confirm?confirm=true&promise_id={promise_id}"
+        f"Click to confirm: http://localhost:9000/confirm?confirm=true&promise_id={promise_id}"
     )
     print(
-        f"Click to reject: http://localhost:5000/confirm?confirm=false&promise_id={promise_id}"
+        f"Click to reject: http://localhost:9000/confirm?confirm=false&promise_id={promise_id}"
     )
     print(f"Email sent to {email} with summary and confirmation links.")
     return

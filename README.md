@@ -46,7 +46,7 @@ uv run app
 From another terminal summarize a website:
 
 ```
-curl -X POST http://localhost:5000/summarize -H "Content-Type: application/json" -d '{"url": "https://resonatehq.io", "email": "johndoe@example.com"}'
+curl -X POST http://localhost:0000/summarize -H "Content-Type: application/json" -d '{"url": "https://resonatehq.io", "email": "johndoe@example.com"}'
 ```
 
 You will be prompted from the application node terminal to accept or reject the summarization.
