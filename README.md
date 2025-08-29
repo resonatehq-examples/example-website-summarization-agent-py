@@ -1,4 +1,6 @@
-# Website summarization application
+![Resonate example app readme banner](/assets/resonate-example-app-readme-banner.png)
+
+# Website summarization agent
 
 This is an example website summarization application built with:
 
