@@ -15,7 +15,7 @@ def downloadAndSummarize(ctx, params):
     url = params["url"]
     usable_id = params["usable_id"]
     email = params["email"]
-
+    print(f"beginning work on {url}")
     # Download the content from the URL and save it to a file
     filename = yield ctx.lfc(download, usable_id, url).options(durable=False,non_retryable_exceptions=(NetworkResolutionError,))
     while True:
@@ -33,6 +33,8 @@ def downloadAndSummarize(ctx, params):
         if confirmed:
             break
 
+        print("summary was rejected, re-summarizing")
+    print("summary confirmed, workflow complete.")
     return summary
 
 
@@ -41,6 +43,7 @@ class NetworkResolutionError(Exception):
 
 def download(_, usable_id, url):
     filename = f"{usable_id}.txt"
+    print(f"downloading {url} and saving to {filename}")
     if os.path.exists(filename):
         print(f"File {filename} already exists. Skipping download.")
         return filename
@@ -62,6 +65,7 @@ def download(_, usable_id, url):
 
 
 def summarize(_, filename):
+    print(f"summarizing content from {filename}")
     try:
         with open(filename, "r", encoding="utf-8") as f:
             file_content = f.read()

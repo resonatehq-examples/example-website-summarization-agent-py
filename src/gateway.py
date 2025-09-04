@@ -24,13 +24,15 @@ def summarize_route_handler():
         params["usable_id"] = clean(data["url"])
 
         # Use Resonate's Async RPC to start the workflow
-        _ = resonate.options(target="poll://any@worker").rpc(
+        handle = resonate.options(target="poll://any@worker").begin_rpc(
             f"downloadAndSummarize-{params['usable_id']}",
             "downloadAndSummarize",
             params,
         )
-
-        return jsonify({"summary": "workflow started"}), 200
+        if not handle.done():
+            return jsonify({"summary": "workflow started"}), 200
+        result = handle.result()
+        return jsonify({"summary": result}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

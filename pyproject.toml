@@ -6,7 +6,7 @@ authors = [
     { name = "Cully Wakelin", email = "flossypurse@gmail.com" }
 ]
 dependencies = [
-    "resonate-sdk>=0.6.2",
+    "resonate-sdk>=0.6.3",
     "flask>=3.0.3",
     "selenium>=4.26.1",
     "bs4>=0.0.2",

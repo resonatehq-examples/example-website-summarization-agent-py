@@ -2,6 +2,10 @@
 
 # Website summarization agent
 
+![summarization agent banner](/assets/summarization-agent-banner.png)
+
+**Resonate Python SDK**
+
 This is an example website summarization application built with:
 
 - Flask: webserver that handles HTTP requests
