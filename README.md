@@ -8,9 +8,9 @@
 
 This is an example website summarization application built with:
 
-- Flask: webserver that handles HTTP requests
+- Flask: web server that handles HTTP requests
 - Resonate: framework for distributed & concurrent applications
-- Beautiful Soup: webscraper
+- Beautiful Soup: web scraper
 - Ollama: LLM that summarizes content
 
 This application uses [uv](https://docs.astral.sh/uv/) as the environment and package manager.
@@ -22,7 +22,7 @@ This application uses [uv](https://docs.astral.sh/uv/) as the environment and pa
 
 **Running the application:**
 
-When running this application locally, you will use 4 separate terminals, each representing its own process, representing a distributed application separated by a network.
+When running this application locally, you will use 4 separate terminals, each running its own process in a distributed application connected over a network.
 
 Run a local Resonate Server:
 
@@ -31,7 +31,7 @@ brew install resonatehq/tap/resonate
 resonate serve
 ```
 
-In another terminal install dependencies:
+In another terminal, install dependencies:
 
 ```
 uv sync
@@ -43,13 +43,13 @@ Run the HTTP gateway service:
 uv run gateway
 ```
 
-In another terminal run a summarization application node:
+In another terminal, run a summarization application node:
 
 ```
 uv run app
 ```
 
-From another terminal summarize a website:
+From another terminal, summarize a website:
 
 ```
 curl -X POST http://localhost:9000/summarize -H "Content-Type: application/json" -d '{"url": "https://resonatehq.io", "email": "johndoe@example.com"}'
