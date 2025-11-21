@@ -1,8 +1,6 @@
-![Resonate example app readme banner](/assets/resonate-example-app-readme-banner.png)
+![summarization agent banner](/assets/summarization-agent-banner.png)
 
 # Website summarization agent
-
-![summarization agent banner](/assets/summarization-agent-banner.png)
 
 **Resonate Python SDK**
 
