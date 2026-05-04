@@ -1,4 +1,10 @@
-![summarization agent banner](/assets/summarization-agent-banner.png)
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/banner-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="./assets/banner-light.png">
+    <img alt="Website Summarization Agent — Resonate example" src="./assets/banner-dark.png">
+  </picture>
+</p>
 
 # Website summarization agent
 
