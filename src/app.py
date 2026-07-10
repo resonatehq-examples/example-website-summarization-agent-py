@@ -1,35 +1,40 @@
-from resonate import Resonate
-from threading import Event
-from selenium import webdriver
-from bs4 import BeautifulSoup
-import ollama
+import asyncio
 import os
+from typing import TYPE_CHECKING
 
-resonate = Resonate.remote(
-    group="worker",
-)
+import ollama
+from bs4 import BeautifulSoup
+from resonate.resonate import Resonate
+from selenium import webdriver
+
+if TYPE_CHECKING:
+    from resonate.context import Context
 
 
-@resonate.register
-def downloadAndSummarize(ctx, params):
+class NetworkResolutionError(Exception):
+    """Permanent DNS resolution failure. Do not retry."""
+
+
+async def downloadAndSummarize(ctx: "Context", params: dict) -> str:
     url = params["url"]
     usable_id = params["usable_id"]
     email = params["email"]
     print(f"beginning work on {url}")
     # Download the content from the URL and save it to a file
-    filename = yield ctx.lfc(download, usable_id, url).options(durable=False,non_retryable_exceptions=(NetworkResolutionError,))
+    filename = await ctx.run(download, usable_id, url)
     while True:
         # Summarize the content of the file
-        summary = yield ctx.lfc(summarize, filename)
+        summary = await ctx.run(summarize, filename)
 
-        # Create Durable Promise to block on confirmation
-        promise = yield ctx.promise()
+        # Create a durable promise to block on human confirmation
+        promise_future = ctx.promise()
+        promise_id = await promise_future.id()
 
         # Send email with summary and confirmation/rejection links
-        yield ctx.lfc(send_email, summary, email, promise.id)
+        await ctx.run(send_email, summary, email, promise_id)
 
-        # Wait for summary to be confirmed or rejected / wait for the promise to be resolved
-        confirmed = yield promise
+        # Wait for the promise to be resolved (confirmed or rejected)
+        confirmed = await promise_future
         if confirmed:
             break
 
@@ -38,10 +43,7 @@ def downloadAndSummarize(ctx, params):
     return summary
 
 
-class NetworkResolutionError(Exception):
-    """Permanent DNS resolution failure. Do not retry."""
-
-def download(_, usable_id, url):
+def download(_, usable_id: str, url: str) -> str:
     filename = f"{usable_id}.txt"
     print(f"downloading {url} and saving to {filename}")
     if os.path.exists(filename):
@@ -64,7 +66,7 @@ def download(_, usable_id, url):
         raise Exception(f"Failed to download data: {e}")
 
 
-def summarize(_, filename):
+def summarize(_, filename: str) -> str:
     print(f"summarizing content from {filename}")
     try:
         with open(filename, "r", encoding="utf-8") as f:
@@ -87,7 +89,7 @@ def summarize(_, filename):
         raise Exception(f"Failed to summarize content: {e}")
 
 
-def send_email(_, summary, email, promise_id):
+def send_email(_, summary: str, email: str, promise_id: str) -> None:
     print(f"Summary: {summary}")
     print(
         f"Click to confirm: http://localhost:9000/confirm?confirm=true&promise_id={promise_id}"
@@ -96,13 +98,24 @@ def send_email(_, summary, email, promise_id):
         f"Click to reject: http://localhost:9000/confirm?confirm=false&promise_id={promise_id}"
     )
     print(f"Email sent to {email} with summary and confirmation links.")
-    return
 
 
-def main():
-    resonate.start()
-    Event().wait()
+async def main() -> None:
+    resonate = Resonate(
+        url=os.environ.get("RESONATE_URL", "http://localhost:8001"),
+        group="worker",
+    )
+    resonate.register(downloadAndSummarize)
+    resonate.register(download)
+    resonate.register(summarize)
+    resonate.register(send_email)
+
+    print("Worker started. Waiting for work...")
+    try:
+        await asyncio.Event().wait()
+    finally:
+        await resonate.stop()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
